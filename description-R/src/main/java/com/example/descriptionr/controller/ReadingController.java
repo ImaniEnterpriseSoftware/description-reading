@@ -2,10 +2,10 @@ package com.example.descriptionr.controller;
 
 import com.example.descriptionr.model.Description;
 import com.example.descriptionr.service.ReadingService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,19 +34,10 @@ public class ReadingController {
     @PostMapping
     public ResponseEntity<Description> create(@RequestBody Description description) {
         Description createdDescription = readingService.create(description);
-        return ResponseEntity.created(URI.create("/api/Descriptions/" + createdDescription.getId())).body(createdDescription);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDescription);
     }
 
-    // Update operation
-    @PutMapping("/{id}")
-    public ResponseEntity<Description> update(@PathVariable String id, @RequestBody Description model) {
-        if (!readingService.get(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        model.setId(id);
-        readingService.update(id, model);
-        return ResponseEntity.noContent().build();
-    }
+
 
     // Delete operation
     @DeleteMapping("/{id}")
