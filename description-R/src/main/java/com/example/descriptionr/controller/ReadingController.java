@@ -37,15 +37,28 @@ public class ReadingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdDescription);
     }
 
+    @PutMapping("/title/{title}")
+    public Description test (@PathVariable("title") String title,
+                             @RequestBody Description newDescription){
+        Description description = readingService.findByTitle(title);
 
+        description.setCollection_id(newDescription.getCollection_id());
+        description.setDetails(newDescription.getDetails());
+        description.setUser_id(newDescription.getUser_id());
+        description.setTitle(newDescription.getTitle());
 
-    // Delete operation
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        if (!readingService.get(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+        readingService.update(title, description);
+        return description;
+    }
+
+    @DeleteMapping
+    public String delete(String title) {
+        Description description = readingService.findByTitle(title);
+        if (description == null) {
+            return "That did not work";
         }
-        readingService.delete(id);
-        return ResponseEntity.noContent().build();
+
+        readingService.delete(String.valueOf(description));
+        return "yay";
     }
 }

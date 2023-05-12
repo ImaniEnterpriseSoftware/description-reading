@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "descriptions")
 public class Description {
 
+    private String id;
+
     private String title;
 
     private String details;
@@ -20,6 +22,14 @@ public class Description {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setTitle(String title) {
