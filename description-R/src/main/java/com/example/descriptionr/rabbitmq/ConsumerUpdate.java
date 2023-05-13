@@ -31,7 +31,7 @@ public class ConsumerUpdate {
             DescriptionDTO dto = objectMapper.readValue(message, DescriptionDTO.class);
             Description descr = modelMapper.map(dto, Description.class);
             readingService.update(descr.getTitle(), descr);
-            System.out.println("Received message: " + dto.toString());
+            System.out.println("Received message for updating: " + dto.toString());
         } catch (IOException e) {
             System.err.println("Error deserializing message: " + e.getMessage());
         }

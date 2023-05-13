@@ -12,26 +12,26 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class ConsumerService {
+public class ConsumerDelete {
     private final ReadingService readingService;
     private final MessageConverter jsonMessageConverter;
     private final ObjectMapper objectMapper;
     private final ModelMapper modelMapper;
 
-    public ConsumerService(ReadingService readingService, MessageConverter jsonMessageConverter, ObjectMapper objectMapper, ModelMapper modelMapper){
+    public ConsumerDelete(ReadingService readingService, MessageConverter jsonMessageConverter, ObjectMapper objectMapper, ModelMapper modelMapper){
         this.readingService = readingService;
         this.jsonMessageConverter = jsonMessageConverter;
         this.objectMapper = objectMapper;
         this.modelMapper = modelMapper;
     }
 
-    @RabbitListener(queues = "description")
+    @RabbitListener(queues = "description-delete")
     public void receiveDescription(String message){
         try {
             DescriptionDTO dto = objectMapper.readValue(message, DescriptionDTO.class);
             Description descr = modelMapper.map(dto, Description.class);
-            readingService.create(descr);
-            System.out.println("Received message for creation: " + dto.toString());
+            readingService.deleteByTitle(descr.getTitle());
+            System.out.println("Received message for deletion: " + dto.toString());
         } catch (IOException e) {
             System.err.println("Error deserializing message: " + e.getMessage());
         }
