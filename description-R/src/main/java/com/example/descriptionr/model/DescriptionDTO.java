@@ -6,8 +6,8 @@ import lombok.Data;
 public class DescriptionDTO {
     private String title;
     private String details;
-    private String userId;
-    private String collectionId;
+    private String user_id;
+    private String collection_id;
 
     public String getTitle() {
         return title;
@@ -26,18 +26,18 @@ public class DescriptionDTO {
     }
 
     public String getUserId() {
-        return userId;
+        return user_id;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        this.user_id = userId;
     }
 
     public String getCollectionId() {
-        return collectionId;
+        return collection_id;
     }
 
     public void setCollectionId(String collectionId) {
-        this.collectionId = collectionId;
+        this.collection_id = collectionId;
     }
 }
