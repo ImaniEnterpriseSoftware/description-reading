@@ -1,7 +1,9 @@
 package com.example.descriptionr.controller;
 
 import com.example.descriptionr.model.Description;
+import com.example.descriptionr.repository.ReadingRepo;
 import com.example.descriptionr.service.ReadingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,27 +40,16 @@ public class ReadingController {
     }
 
     @PutMapping("/title/{title}")
-    public Description test (@PathVariable("title") String title,
+    public String update (@PathVariable("title") String title,
                              @RequestBody Description newDescription){
-        Description description = readingService.findByTitle(title);
-
-        description.setCollection_id(newDescription.getCollection_id());
-        description.setDetails(newDescription.getDetails());
-        description.setUser_id(newDescription.getUser_id());
-        description.setTitle(newDescription.getTitle());
-
-        readingService.update(title, description);
-        return description;
+        readingService.update(title, newDescription);
+        return String.format("Description with title: %s was updated", title);
     }
 
-    @DeleteMapping
-    public String delete(String title) {
-        Description description = readingService.findByTitle(title);
-        if (description == null) {
-            return "That did not work";
-        }
+    @DeleteMapping("/title/{title}")
+    public String delete(@PathVariable("title") String title) {
 
-        readingService.delete(String.valueOf(description));
-        return "yay";
+        readingService.deleteByTitle(title);
+        return String.format("Description with title: %s was deleted", title);
     }
 }

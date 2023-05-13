@@ -30,34 +30,37 @@ public class ReadingService {
     }
 
     public Description findByTitle(String title) {
-        return readingRepo.findByTitle(title);
+        Description description = readingRepo.findByTitle(title);
+        return description;
     }
 
-    public Description updateDescription(String id, Description updatedDescription) {
-        Description descriptionToUpdate = readingRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Description not found with id " + id));
+    public String update (String title, Description description){
+        Description testDescription = readingRepo.findByTitle(title);
+        String id = testDescription.get_id();
 
-        descriptionToUpdate.setTitle(updatedDescription.getTitle());
-        descriptionToUpdate.setDetails(updatedDescription.getDetails());
-        descriptionToUpdate.setUser_id(updatedDescription.getUser_id());
-        descriptionToUpdate.setCollection_id(updatedDescription.getCollection_id());
+        Description descriptionToUpdate = readingRepo.findById(id).get();
 
-        return readingRepo.save(descriptionToUpdate);
+        if (descriptionToUpdate != null) {
+            descriptionToUpdate.setTitle(description.getTitle());
+            descriptionToUpdate.setDetails(description.getDetails());
+            descriptionToUpdate.setUser_id(description.getUser_id());
+            descriptionToUpdate.setCollection_id(description.getCollection_id());
+
+            readingRepo.save(descriptionToUpdate);
+
+            return "Saved";
+        }
+        return "Description does not exist";
     }
 
-    public Description update (String title, Description description){
-        Description descriptionToUpdate = findByTitle(title);
+    public String deleteByTitle (String title){
+        Description description = readingRepo.findByTitle(title);
+        String id = description.get_id();
 
-        descriptionToUpdate.setTitle(description.getTitle());
-        descriptionToUpdate.setDetails(description.getDetails());
-        descriptionToUpdate.setUser_id(description.getUser_id());
-        descriptionToUpdate.setCollection_id(description.getCollection_id());
-
-        readingRepo.save(descriptionToUpdate);
-        return descriptionToUpdate;
-    }
-
-    public void delete (String id){
-        readingRepo.deleteById(id);
+        if(id != null){
+            readingRepo.deleteById(id);
+            return "Description is deleted";
+        }
+        return "Description does not exist";
     }
 }

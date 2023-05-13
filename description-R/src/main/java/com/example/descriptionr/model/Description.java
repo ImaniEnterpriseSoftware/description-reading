@@ -3,6 +3,7 @@ package com.example.descriptionr.model;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @AllArgsConstructor
@@ -10,7 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "descriptions")
 public class Description {
 
-    private String id;
+    @Id
+    private String _id;
 
     private String title;
 
@@ -20,16 +22,16 @@ public class Description {
 
     private String collection_id;
 
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
     public String getTitle() {
         return title;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setTitle(String title) {
