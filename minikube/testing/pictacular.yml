@@ -1,0 +1,227 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: imanicipation
+  labels:
+    name: imanicipation
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imani-gateway
+  namespace: imanicipation
+  labels:
+    app: imani-gateway
+    tier: backend
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8080
+  selector:
+    app: imani-gateway
+    tier: backend
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imani-gateway
+  namespace: imanicipation
+spec:
+  selector:
+    matchLabels:
+      app: imani-gateway
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: imani-gateway
+        tier: backend
+    spec:
+      containers:
+        - name: imani-gateway
+          image: registry.hub.docker.com/imanileemans/gateway
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: description-cud
+  namespace: imanicipation
+  labels:
+    app: description-cud
+    tier: backend
+spec:
+  ports:
+    - port: 8081
+      targetPort: 8081
+  selector:
+    app: description-cud
+    tier: backend
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: description-cud
+  namespace: imanicipation
+spec:
+  selector:
+    matchLabels:
+      app: imani-service
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: imani-service
+        tier: backend
+    spec:
+      containers:
+        - name: imani-service
+          image: registry.hub.docker.com/imanileemans/description-cud
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: description-reading
+  namespace: imanicipation  
+  labels:
+    app: description-reading
+    tier: backend
+spec:
+  ports:
+    - port: 8082
+      targetPort: 8082
+  selector:
+    app: description-reading
+    tier: backend
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: description-reading
+  namespace: imanicipation
+spec:
+  selector:
+    matchLabels:
+      app: imani-service
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: imani-service
+        tier: backend
+    spec:
+      containers:
+        - name: imani-service
+          image: registry.hub.docker.com/imanileemans/description-r
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: description-mysql
+  namespace: imanicipation
+  labels:
+    app: description-mysql
+    tier: backend
+spec:
+  selector:
+    app: description-mysql
+  ports:
+    - protocol: TCP
+      name: "3307"
+      port: 3307
+      targetPort: 3307
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: description-mysql
+  namespace: imanicipation
+spec:
+  selector:
+    matchLabels:
+      app: description-mysql
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: description-mysql
+        tier: backend
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest
+          ports:
+            - containerPort: 3307
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: m@nipassword
+            - name: MYSQL_TCP_PORT
+              value: "3307"
+            - name: MYSQL_DATABASE
+              value: descriptiondb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbit-mq
+  namespace: imanicipation
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: rabbit-mq
+  ports:
+    - name: amqp
+      port: 5672
+      targetPort: 5672
+    - name: management
+      port: 15672
+      targetPort: 15672
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbit-mq
+  namespace: imanicipation
+spec:
+  selector:
+    matchLabels:
+      app: rabbit-mq
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rabbit-mq
+        tier: backend
+    spec:
+      containers:
+        - name: rabbit-mq
+          image: rabbitmq:latest
+          ports:
+            - containerPort: 5672
+              name: amqp
+            - containerPort: 15672
+              name: management
+          env:
+            - name: RABBITMQ_DEFAULT_PASS
+              value: guest
+            - name: RABBITMQ_DEFAULT_USER
+              value: guest

@@ -10,9 +10,13 @@
         <module name="description-R" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="description-CUD" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="description-CUD" options="-parameters" />
       <module name="description-R" options="-parameters" />
     </option>
   </component>

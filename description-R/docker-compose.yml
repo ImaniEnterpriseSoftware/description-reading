@@ -8,7 +8,7 @@ services:
       context: /
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8082:8082"
     environment:
       SPRING_DATA_MONGODB_URI: mongodb+srv://455181:83ZMrlRZAIbcSTqM@project.uah3szf.mongodb.net/?retryWrites=true&w=majority
       SPRING_DATA_MONGODB_DATABASE: IndvProject
